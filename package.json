@@ -1,0 +1,14 @@
+{
+  "name": "ts-todo",
+  "version": "1.0.0",
+  "description": "Typescript todo list",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "typescript",
+    "todo"
+  ],
+  "author": "Hugo Burguete",
+  "license": "ISC"
+}
