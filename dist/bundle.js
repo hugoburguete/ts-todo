@@ -17266,26 +17266,65 @@ var todo_1 = __webpack_require__(/*! ./todo */ "./src/todo.ts");
 var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 var todoCollection = new todo_1.TodoCollection();
 document.addEventListener('DOMContentLoaded', function (event) {
-    var addTodoButton = document.getElementById('btn-add-todo');
-    addTodoButton.addEventListener('click', function (event) {
-        var testTodo = new todo_1.Todo('Test', moment());
-        todoCollection.addTodo(testTodo);
-        var tableBody = document.getElementById('table-todo-body');
+    // Add TODO button
+    document.getElementById('btn-add-todo').addEventListener('click', function (event) {
+        resetForm();
+        document.getElementById('todo-form').classList.remove('d-none');
+    });
+    // Form submit button
+    document.getElementById('todo-form-submit').addEventListener('click', function (event) {
+        event.preventDefault();
+        submitTodo();
+    });
+});
+function resetForm() {
+    document.getElementById('todo-title').value = '';
+    document.getElementById('todo-date').value = '';
+    document.getElementById('todo-id').value = '';
+    document.getElementById('todo-form-submit').innerText = 'Sumit';
+}
+function submitTodo() {
+    var title = document.getElementById('todo-title').value;
+    var date = document.getElementById('todo-date').value;
+    var todoIndex = document.getElementById('todo-id').value;
+    var todo = new todo_1.Todo(title, moment(date));
+    if (todoIndex.length == 0) {
+        todoCollection.addTodo(todo);
+    }
+    else {
+        todoCollection.updateTodo(parseInt(todoIndex), todo);
+    }
+    document.getElementById('todo-form').classList.add('d-none');
+    renderTodos();
+}
+function renderTodos() {
+    var tableBody = document.getElementById('table-todo-body');
+    // Clear table
+    tableBody.innerHTML = '';
+    // Render items
+    todoCollection.getTodos().forEach(function (todo) {
         var todoRow = document.createElement('tr');
         var todoCol1 = document.createElement('td');
         var todoCol2 = document.createElement('td');
         var todoCol3 = makeActionsCell();
-        todoRow.setAttribute('data-index', todoCollection.count().toString());
-        todoCol1.innerHTML = testTodo.getTitle();
-        todoCol2.innerHTML = testTodo.getDate();
+        todoRow.setAttribute('data-index', todoCollection.getTodoId(todo).toString());
+        todoCol1.innerHTML = todo.getTitle();
+        todoCol2.innerHTML = todo.getDate();
         todoRow.appendChild(todoCol1);
         todoRow.appendChild(todoCol2);
         todoRow.appendChild(todoCol3);
         tableBody.appendChild(todoRow);
     });
-});
+}
 function makeActionsCell() {
     var todoCol3 = document.createElement('td');
+    var deleteButton = makeDeleteButton();
+    var updateButton = makeUpdateButton();
+    todoCol3.appendChild(deleteButton);
+    todoCol3.appendChild(updateButton);
+    return todoCol3;
+}
+function makeDeleteButton() {
     var deleteButton = document.createElement('button');
     deleteButton.setAttribute('class', 'btn btn-danger');
     deleteButton.addEventListener('click', function () {
@@ -17295,9 +17334,24 @@ function makeActionsCell() {
         todoCollection.removeTodoByIndex(index);
         tableBody.removeChild(todoRow);
     });
-    deleteButton.innerText = 'Remove Todo';
-    todoCol3.appendChild(deleteButton);
-    return todoCol3;
+    deleteButton.innerText = 'Remove';
+    return deleteButton;
+}
+function makeUpdateButton() {
+    var updateButton = document.createElement('button');
+    updateButton.setAttribute('class', 'btn btn-secondary');
+    updateButton.addEventListener('click', function () {
+        var todoRow = this.parentElement.parentElement;
+        var index = todoRow.getAttribute('data-index');
+        var todo = todoCollection.getTodo(parseInt(index));
+        document.getElementById('todo-id').value = index;
+        document.getElementById('todo-title').value = todo.getTitle();
+        document.getElementById('todo-date').value = todo.getDate('DD/MM/YYYY');
+        document.getElementById('todo-form-submit').innerText = 'Update';
+        document.getElementById('todo-form').classList.remove('d-none');
+    });
+    updateButton.innerText = 'Update';
+    return updateButton;
 }
 
 
@@ -17356,7 +17410,7 @@ var TodoCollection = /** @class */ (function () {
      * @param todo
      */
     TodoCollection.prototype.removeTodo = function (todo) {
-        this.removeTodoByIndex(this.todos.indexOf(todo));
+        this.removeTodoByIndex(this.getTodoId(todo));
     };
     /**
      * Remoes a todo in this collection
@@ -17373,10 +17427,27 @@ var TodoCollection = /** @class */ (function () {
         return this.todos[index];
     };
     /**
+     * Updates a todo
+     * @param index
+     * @param todo
+     */
+    TodoCollection.prototype.updateTodo = function (index, todo) {
+        this.todos[index] = todo;
+    };
+    /**
      * Returns the amount of todos in this collection
      */
     TodoCollection.prototype.count = function () {
         return this.todos.length;
+    };
+    /**
+     * Retrieves todo index
+     */
+    TodoCollection.prototype.getTodoId = function (todo) {
+        return this.todos.indexOf(todo);
+    };
+    TodoCollection.prototype.getTodos = function () {
+        return this.todos;
     };
     return TodoCollection;
 }());

@@ -57,7 +57,7 @@ export class TodoCollection {
      * @param todo 
      */
     public removeTodo(todo: Todo): void {
-        this.removeTodoByIndex(this.todos.indexOf(todo));
+        this.removeTodoByIndex(this.getTodoId(todo));
     }
 
     /**
@@ -77,9 +77,29 @@ export class TodoCollection {
     }
 
     /**
+     * Updates a todo
+     * @param index 
+     * @param todo 
+     */
+    public updateTodo(index: number, todo: Todo) {
+        this.todos[index] = todo;
+    }
+
+    /**
      * Returns the amount of todos in this collection
      */
     public count(): number {
         return this.todos.length;
+    }
+
+    /**
+     * Retrieves todo index
+     */
+    public getTodoId(todo: Todo): number {
+        return this.todos.indexOf(todo);
+    }
+
+    public getTodos(): Todo[] {
+        return this.todos;
     }
 }
