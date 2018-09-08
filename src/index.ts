@@ -4,12 +4,12 @@ interface Person {
 }
 
 function greeter(person: Person) {
-    return "Hello, " + person;
+    return "Hello, " + person.firstName + " " + person.lastName;
 }
 
 let user = {
-    firstName: "Jane",
+    firstName: "John",
     lastName: "Doe"
 };
 
-document.body.innerHTML = greeter(user);
+console.log(greeter(user));
