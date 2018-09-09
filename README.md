@@ -1,0 +1,1 @@
+This is a just a todo list using webpack + typescript. Nice experience.
