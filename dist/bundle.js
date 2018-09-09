@@ -17329,10 +17329,9 @@ function makeDeleteButton() {
     deleteButton.setAttribute('class', 'btn btn-danger');
     deleteButton.addEventListener('click', function () {
         var todoRow = this.parentElement.parentElement;
-        var tableBody = document.getElementById('table-todo-body');
         var index = parseInt(todoRow.getAttribute('data-index'));
         todoCollection.removeTodoByIndex(index);
-        tableBody.removeChild(todoRow);
+        renderTodos();
     });
     deleteButton.innerText = 'Remove';
     return deleteButton;

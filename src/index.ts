@@ -78,10 +78,9 @@ function makeDeleteButton(): HTMLButtonElement {
     deleteButton.setAttribute('class', 'btn btn-danger');
     deleteButton.addEventListener('click', function() {
         const todoRow = this.parentElement.parentElement;
-        const tableBody = document.getElementById('table-todo-body');
         const index = parseInt(todoRow.getAttribute('data-index'));
         todoCollection.removeTodoByIndex(index);
-        tableBody.removeChild(todoRow);
+        renderTodos();
     });
     deleteButton.innerText = 'Remove';
     return deleteButton;
