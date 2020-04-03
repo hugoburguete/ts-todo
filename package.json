@@ -18,7 +18,7 @@
         "source-map-loader": "0.2.4",
         "typescript": "^3.0.3",
         "webpack": "4.17.2",
-        "webpack-cli": "3.1.0"
+        "webpack-cli": "3.3.11"
     },
     "dependencies": {
         "moment": "^2.24.0"
